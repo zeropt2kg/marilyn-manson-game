@@ -16,6 +16,10 @@
                     isStarted = true;
                     timerCounter = 10;
                     missCounter = 0;
+                    for(var i = 0; i < 25; i++){
+                        document.getElementById("marilyn" + i).style.color = "#000000";
+                        document.getElementById("marilyn" + i).style.fontWeight = "normal";
+                    }
                     document.getElementById("disp_result").innerHTML = "";
                     document.getElementById("remtime").innerHTML = timerCounter;
                     correctNum = Math.floor(Math.random() * 25);
@@ -32,8 +36,9 @@
                 for(var i = 0; i < 5; i++){
                     for(var j = 0; j < 5; j++){
                         disp_str += '<a href="javascript:makeChoice(' + (i*5+j) + ')">';
+                        disp_str += '<div id="marilyn' + (i*5+j) + ">
                         disp_str += marilyns[i*5+j];
-                        disp_str += "</a>　";
+                        disp_str += "</div></a>　";
                     }
                     disp_str += "<br />";
                 }
@@ -117,6 +122,8 @@
                     msg = "Poor..."
                 }
                 disp_str += "<h4>Grade : " + msg + "</h4>";
+                document.getElementById("marilyn" + correctNum).style.color = "#FF0000";
+                document.getElementById("marilyn" + correctNum).style.fontWeight = "bold";
                 document.getElementById("disp_result").innerHTML = disp_str;
             }
         </script>
