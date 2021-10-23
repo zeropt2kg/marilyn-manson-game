@@ -58,7 +58,7 @@
                             for(var j = 0; j < rnd_num_ary.length; j++){
                                 rnd_num_ary[j] = Math.floor(Math.random() * rnd_str_ary.length);
                             }
-                        } while(rnd_num_ary == [0, 0, 2, 2, 1, 2]);
+                        } while(ary_equal(rnd_num_ary, [0, 0, 2, 2, 1, 2]));
                     } else {
                         rnd_num_ary = [0, 0, 2, 2, 1, 2];
                     }
@@ -70,6 +70,14 @@
                 }
 
                 return marilyns;
+            }
+            
+            function ary_equal(ary1, ary2){
+                if(ary1.length != ary2.length) return false;
+                for(var i = 0; i < ary1.length; i++){
+                    if(ary1[i] !== ary2[i]) return false;
+                }
+                return true;
             }
 
             // 文字列選択時処理
