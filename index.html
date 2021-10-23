@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Marilyn Manson Game</title>
+        <script type="text/javascript">
+            var correctNum;  // 正解の選択肢
+            var isStarted = false;  // ゲーム中かどうか
+            var timerCounter;  // 残り時間(s)
+            var intv_id;  // タイマー(setInterval利用)ID
+            var del_timer_id;  // メッセージ消去タイマー(setTimeout利用)ID
+            var missCounter = 0;  // ミス回数カウンター
+
+            // 初期化
+            function init(){
+                if(!isStarted){
+                    isStarted = true;
+                    timerCounter = 10;
+                    missCounter = 0;
+                    document.getElementById("disp_result").innerHTML = "";
+                    document.getElementById("remtime").innerHTML = timerCounter;
+                    correctNum = Math.floor(Math.random() * 25);
+                    displayStrings();
+                    intv_id = setInterval(decrTimer, 1000);
+                }
+            }
+
+            // 文字列の表示
+            function displayStrings(){
+                marilyns = generateStrings();
+                disp_str = "";
+
+                for(var i = 0; i < 5; i++){
+                    for(var j = 0; j < 5; j++){
+                        disp_str += '<a href="javascript:makeChoice(' + (i*5+j) + ')">';
+                        disp_str += marilyns[i*5+j];
+                        disp_str += "</a>　";
+                    }
+                    disp_str += "<br />";
+                }
+
+                document.getElementById("disp").innerHTML = disp_str;
+            }
+
+            // 文字列の生成
+            function generateStrings(){
+                marilyns = new Array(25);
+                rnd_str_ary = ["リ", "ソ", "ン"];
+
+                for(var i = 0; i < marilyns.length; i++){
+                    rnd_num_ary = new Array(6);
+                    if(i != correctNum){
+                        do {
+                            for(var j = 0; j < rnd_num_ary.length; j++){
+                                rnd_num_ary[j] = Math.floor(Math.random() * rnd_str_ary.length);
+                            }
+                        } while(rnd_num_ary == [0, 0, 2, 2, 1, 2]);
+                    } else {
+                        rnd_num_ary = [0, 0, 2, 2, 1, 2];
+                    }
+
+                    marilyns[i] = "マ" + rnd_str_ary[rnd_num_ary[0]] +
+                                  rnd_str_ary[rnd_num_ary[1]] + rnd_str_ary[rnd_num_ary[2]] +
+                                  "・マ" + rnd_str_ary[rnd_num_ary[3]] +
+                                  rnd_str_ary[rnd_num_ary[4]] + rnd_str_ary[rnd_num_ary[5]];
+                }
+
+                return marilyns;
+            }
+
+            // 文字列選択時処理
+            function makeChoice(num){
+                if(isStarted){
+                    if(num == correctNum){
+                        clearInterval(intv_id);
+                        clearTimeout(del_timer_id);
+                        showResult();
+                        isStarted = false;
+                    }else{
+                        clearTimeout(del_timer_id);
+                        document.getElementById("disp_result").innerHTML = "Not correct!!";
+                        del_timer_id = setTimeout(function(){
+                            document.getElementById("disp_result").innerHTML = "";
+                        }, 1000);
+                        missCounter++;
+                    }
+                }
+            }
+
+            // タイマー減少＆ゲーム終了処理
+            function decrTimer(){
+                timerCounter--;
+                document.getElementById("remtime").innerHTML = timerCounter;
+                if(timerCounter <= 0){
+                    clearInterval(intv_id);
+                    clearTimeout(del_timer_id);
+                    alert("Time's Up!!");
+                    showResult();
+                    isStarted = false;
+                }
+            }
+
+            // 結果発表
+            function showResult(){
+                disp_str = "";
+                var msg;
+                gamePoint = timerCounter * 100 - missCounter * 10;
+
+                disp_str += "<h3>Your Point : " + gamePoint + "</h3>";
+                disp_str += "<div>(Point = (Remaining time)*100-(No. of errors)*10)</div>";
+                if(gamePoint >= 700){
+                    msg = "Great!!";
+                }else if(gamePoint >= 400){
+                    msg = "Good!";
+                }else if(gamePoint >= 150){
+                    msg = "OK.";
+                }else{
+                    msg = "Poor..."
+                }
+                disp_str += "<h4>Grade : " + msg + "</h4>";
+                document.getElementById("disp_result").innerHTML = disp_str;
+            }
+        </script>
+    </head>
+    <body>
+        <div style="text-align:center;">
+            <h1>Marilyn Manson Game</h1>
+            <div id="disp"></div>
+            <input type="button" onClick="init()" value="Game Start"><br />
+            <div>Remaining Time：<span id="remtime"></span>sec</div>
+            <div id="disp_result"></div>
+        </form>
+    </body>
+</html>
